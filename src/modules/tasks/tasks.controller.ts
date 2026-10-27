@@ -11,25 +11,19 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import type {
-  CreateTaskPayload,
-  Task,
-  TaskStatus,
-  UpdateTaskStatusPayload,
-} from './interfaces/tasks.interfaces.js';
+import { CreateTaskDto } from './dto/create-task.dto.js';
 import { TasksService } from './tasks.service.js';
+import { GetTasksFilterDto } from './dto/get-tasks-filter.dto.js';
+import type { Task, TaskStatus } from './interfaces/tasks.interfaces.js';
+import { UpdateTaskStatusDto } from './dto/update-task-status.dto.js';
 
 @Controller('tasks')
 export class TasksController {
-  // Dependency Injection: Controller only knows about TasksService
   constructor(private readonly tasksService: TasksService) {}
 
   @Get()
-  findAll(
-    @Query('status') status?: TaskStatus,
-    @Query('search') search?: string,
-  ): Task[] {
-    return this.tasksService.getTasks(status, search);
+  findAll(@Query() filterDto: GetTasksFilterDto): Task[] {
+    return this.tasksService.getTasks(filterDto.status, filterDto.search);
   }
 
   @Get('stats')
@@ -43,16 +37,16 @@ export class TasksController {
   }
 
   @Post()
-  create(@Body() payload: CreateTaskPayload): Task {
-    return this.tasksService.createTask(payload);
+  create(@Body() createTaskDto: CreateTaskDto): Task {
+    return this.tasksService.createTask(createTaskDto);
   }
 
   @Patch(':id/status')
   updateStatus(
     @Param('id') id: string,
-    @Body() payload: UpdateTaskStatusPayload,
+    @Body() updateTaskStatusDto: UpdateTaskStatusDto,
   ): Task {
-    return this.tasksService.updateTaskStatus(id, payload);
+    return this.tasksService.updateTaskStatus(id, updateTaskStatusDto);
   }
 
   @Delete(':id')
