@@ -36,10 +36,8 @@ export class TasksRepository {
   }
 
   findByTitle(title: string): Task | null {
-    const normalized = title.trim().toLowerCase();
-    const task = this.tasks.find(
-      (t) => t.title.toLowerCase() === normalized,
-    );
+    const normalized = title.toLowerCase();
+    const task = this.tasks.find((task) => task.title.toLowerCase() === normalized);
     return task ?? null;
   }
 
@@ -60,8 +58,8 @@ export class TasksRepository {
   create(payload: CreateTaskPayload): Task {
     const newTask: Task = {
       id: randomUUID(),
-      title: payload.title.trim(),
-      description: payload.description.trim(),
+      title: payload.title,
+      description: payload.description,
       status: TaskStatus.OPEN,
       userId: payload.userId,
       createdAt: new Date(),

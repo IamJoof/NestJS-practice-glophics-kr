@@ -18,7 +18,7 @@ export class UsersRepository {
     }
 
     findByEmail(email: string) : User | null {
-        const normalized = email.trim().toLowerCase();
+        const normalized = email;
         return (
             this.users.find(
                 (user) => user.email.toLowerCase() === normalized)
@@ -29,8 +29,8 @@ export class UsersRepository {
     create(payload: CreateUserPayload): User {
         const newUser: User = {
             id: randomUUID(),
-            name: payload.name.trim(),
-            email: payload.email.trim().toLowerCase(),
+            name: payload.name,
+            email: payload.email,
             role: payload.role ?? UserRole.DEVELOPER,
             isActive: true,
             createdAt: new Date(),
